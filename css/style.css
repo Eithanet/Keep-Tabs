@@ -1,0 +1,247 @@
+html, body {
+  background-color: #01e675;
+  font-family: "Open Sans";
+  overflow: hidden;
+  width: 100%;
+height: 100%;
+margin: 0;
+padding: 0;
+overflow: hidden
+}
+
+header {
+  text-align: center;
+  margin-top: 9.8%;
+}
+header h1 {
+  color: white;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.clouds {
+  background-image: url("../images/clouds.png");
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  height: 107px;
+  width: 740px;
+}
+
+.contacts {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #d2f3ea;
+  width: 740px;
+  height: 346px;
+  margin-top: -3%;
+}
+.contact {
+  display: inline-block;
+  height: 70px;
+  width: 230px;
+  background-color: #bbf2e3;
+  margin-top: 3.5%;
+  border-radius: 15px;
+  padding-top: 1.7%;
+  padding-left: 2%;
+  margin-left: 1.5%;
+  vertical-align: text-bottom;
+}
+.bell {
+  z-index: 2;
+  font-size: 23px !important;
+  margin-left: 27%;
+  margin-top: -3.4% !important;
+}
+.contact p {
+  display: inline;
+  color: #70cab1;
+font-size: 20px;
+    margin-top: -0.25%;
+      position: fixed;
+}
+.contact p span {
+  display: block;
+  position: relative;
+  font-size: 16.5px;
+}
+.contact.offline {
+order: 2;
+}
+.contact.online {
+order: 1;
+}
+.profileimg {
+  vertical-align: middle;
+  margin-right: 4%;
+  display: inline-block;
+  height: 49px;
+  width: 49px;
+  position: relative;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: #dfe5e7;
+}
+.status {
+display: inline;
+ margin-left: 17%;
+position: absolute;
+margin-top: -4px;
+}
+.status.online:before {
+  display: inline;
+  content: ' \25CF';
+  font-size: 36px;
+  color: #00ff00;
+}
+
+.status.offline:before{
+  display: inline;
+  content: ' \25CF';
+  font-size: 36px;
+  color: red;
+}
+.slider {
+      text-align: center;
+}
+.slider li {
+  display: inline;
+margin-right: -0.5%;
+}
+.slider li:before {
+  display: inline;
+    content: ' \25CF';
+    font-size: 36px;
+    color: #a1edd8;
+}
+.slider li#active:before {
+    color: #2aa382;
+}
+/*
+#tab1:hover {
+    margin-left: 100%;
+    opacity: 0;
+}
+*/
+#overlay {
+    position: fixed;
+    visibility: hidden;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 2;
+}
+
+#overlay div{
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    font-size: 50px;
+    transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+}
+#overlay div#overlay_text {
+  background-color: #e3e8e8;
+  white-space: nowrap;
+  font-size: 22px;
+}
+#overlay div#overlay_view {
+  top: 55%;
+  width: 70%;
+}
+#overlay div#overlay_button {
+    top: 75%;
+  font-size: 17px;
+}
+
+
+
+/* qr */
+#overlay_qr {
+    position: fixed;
+    visibility: hidden;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 2;
+}
+
+#overlay_qr div{
+    position: absolute;
+    top: 24%;
+    left: 50%;
+    font-size: 50px;
+    transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+}
+#overlay_qr div#overlay_text_qr {
+  background-color: #e3e8e8;
+  white-space: nowrap;
+  font-size: 22px;
+}
+#overlay_qr div#qrcode {
+  top: 54%;
+}
+#overlay_qr div#overlay_button_qr {
+    top: 84%;
+  font-size: 17px;
+}
+#loading {
+  left: 29%;
+    padding-top: 14%;
+    position: relative;
+    font-size: 31px;
+}
+
+/* stopit1 */
+#overlay_stopit1 {
+    position: fixed;
+    visibility: hidden;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 2;
+}
+
+#overlay_stopit1 div{
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    font-size: 50px;
+    transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+}
+#overlay_stopit1 div#overlay_text_stopit1 {
+  background-color: #e3e8e8;
+  white-space: nowrap;
+  font-size: 22px;
+}
+#overlay_stopit1 div#overlay_view_stopit1 {
+  top: 55%;
+  width: 70%;
+}
+#overlay_stopit1 div#overlay_button_stopit1 {
+    top: 75%;
+  font-size: 17px;
+  left: 61%;
+}
+#overlay_stopit1 div#overlay_button_stopit1_2 {
+    top: 75%;
+  font-size: 17px;
+      left: 39%;
+}
