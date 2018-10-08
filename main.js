@@ -1,19 +1,33 @@
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow,dialog} = require('electron')
 const path = require('path')
 const url = require('url')
-const {autoUpdater} = require('electron-updater');
 const log = require('electron-log');
+const {autoUpdater} = require("electron-updater");
+autoUpdater.logger = log;
+autoUpdater.logger.transports.file.level = 'info';
+log.info('App starting...');
 app.setAppUserModelId("com.electron.keeptabs");
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
 
+function sendStatusToWindow(text) {
+  log.info(text);
+  win.webContents.send('message', text);
+}
+
 function createWindow () {
   // Create the browser window.
   win = new BrowserWindow({
     /*
+    public
     width: 746,
     height: 580,
+    */
+    /*
+    for development
+    width: 746,
+    height: 600,
     */
     width: 746,
     height: 600,
@@ -28,7 +42,7 @@ function createWindow () {
     slashes: true
   }))
 
-  // Open the DevTools.
+  // Open the DevTools. only for development
 win.webContents.openDevTools();
   // Emitted when the window is closed.
   win.on('closed', () => {
@@ -39,13 +53,54 @@ win.webContents.openDevTools();
   })
 }
 
+
+autoUpdater.on('checking-for-update', () => {
+  sendStatusToWindow('Checking for update...');
+})
+autoUpdater.on('update-available', (info) => {
+  sendStatusToWindow('Update available.');
+  win.webContents.send('update');
+})
+autoUpdater.on('update-not-available', (info) => {
+  sendStatusToWindow('Update not available.');
+})
+autoUpdater.on('error', (err) => {
+  sendStatusToWindow('Error in auto-updater. ' + err);
+})
+autoUpdater.on('download-progress', (progressObj) => {
+  let log_message = "Download speed: " + progressObj.bytesPerSecond;
+  log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
+  log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
+  sendStatusToWindow(log_message);
+  win.webContents.send('update_progress',progressObj.percent,progressObj.transferred,progressObj.total);
+})
+autoUpdater.on('update-downloaded', (info) => {
+  sendStatusToWindow('Update downloaded');
+  //autoUpdater.quitAndInstall();
+  dialog.showMessageBox({
+    type: 'question',
+    buttons: ['Install and Relaunch', 'Later'],
+    defaultId: 0,
+    message: 'A new version of Keep Tabs has been downloaded',
+    detail: "Do you want to install it?"
+  }, response => {
+    if (response === 0) {
+      setTimeout(() => autoUpdater.quitAndInstall(), 1);
+    }
+  });
+});
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', createWindow)
 
+app.on('ready', function()  {
+   autoUpdater.checkForUpdates();
+ });
+
 app.on('browser-window-created',function(e,window) {
-//window.setMenu(null);
+//for public window.setMenu(null); (not in development)
+window.setMenu(null);
 });
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
@@ -66,40 +121,3 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
-//-------------------------------------------------------------------
-// Auto updates
-//-------------------------------------------------------------------
-const sendStatusToWindow = (text) => {
-  log.info(text);
-  if (win) {
-    win.webContents.send('message', text);
-  }
-};
-
-autoUpdater.on('checking-for-update', () => {
-  sendStatusToWindow('Checking for update...');
-});
-autoUpdater.on('update-available', info => {
-  sendStatusToWindow('Update available.');
-});
-autoUpdater.on('update-not-available', info => {
-  sendStatusToWindow('Update not available.');
-});
-autoUpdater.on('error', err => {
-  sendStatusToWindow(`Error in auto-updater: ${err.toString()}`);
-});
-autoUpdater.on('download-progress', progressObj => {
-  sendStatusToWindow(
-    `Download speed: ${progressObj.bytesPerSecond} - Downloaded ${progressObj.percent}% (${progressObj.transferred} + '/' + ${progressObj.total} + )`
-  );
-});
-autoUpdater.on('update-downloaded', info => {
-  sendStatusToWindow('Update downloaded; will install now');
-});
-
-autoUpdater.on('update-downloaded', info => {
-  // Wait 5 seconds, then quit and install
-  // In your application, you don't need to wait 500 ms.
-  // You could call autoUpdater.quitAndInstall(); immediately
-  autoUpdater.quitAndInstall();
-});

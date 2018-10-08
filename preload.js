@@ -22,8 +22,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
   } else {
     ipcRenderer.sendToHost("notstart");
   }
+
   //if we need qr to start
-  //NEED SOME WORK - the qr on whatsapp update, need to update it every few sec
   if(window.Store.Stream.mode == "QR") {
       needqr();
   }
@@ -56,22 +56,22 @@ document.addEventListener("DOMContentLoaded", function(event) {
   //host need the online list, CheckContacts on false will return it
   ipcRenderer.on('all_get_online_array', function(){
     CheckContacts('false');
-    console.log("all_get_online_array ran the CheckContacts on false")
+    console.log("all_get_online_array ran the CheckContacts on false");
   });
 
   //host need the qr code
   ipcRenderer.on('checkqr', function(){
     needqr();
-    console.log("need qr");
+    //console.log("need qr");
   });
 
   //function to know if we need qr, and if we need, it will send it to the host
   function needqr() {
     if(window.Store.Stream.mode == "QR") {
-      console.log("mode is qr");
+      //console.log("mode is qr");
       var qr_imgdata = document.getElementsByClassName("_2EZ_m")[0].getElementsByTagName('img')[0].src;
       ipcRenderer.sendToHost("theqr",qr_imgdata);
-      console.log("the qr is sent");
+      //console.log("the qr is sent");
       return true;
     } else {
       return false;
@@ -80,13 +80,46 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   //Check the contacts
   function CheckContacts(send = "true") {
+
+    //Some notes..
+    //window.Store.Stream.info - "PAIRING" - מנסה להתחבר למכשיר הטלפון
+    //window.Store.Stream.info - TIMEOUT - lost connection
+    //window.Store.Stream.mode - "CONFLICT" - ווצאפ פתוח בעוד מקום
+    //window.Store.Stream.info - "NORMAL" - הכל נורמאלי ועובד
+    //window.Store.Stream.mode - "MAIN" - הכל נטען, לא אומר אבל אם יש בעיה
+    //window.Store.Stream.mode - "QR" - צריך לסרוק קוד qr
+
     //if there is no connection
-    //NEED SOME WORK - not stop it, error over lay
     if (window.Store.Stream.info == "TIMEOUT") {
-      ipcRenderer.sendToHost("stopit1");
+      ipcRenderer.sendToHost("error_overlay","TIMEOUT");
       return;
     } else {
-      ipcRenderer.sendToHost("stopit1_no");
+      ipcRenderer.sendToHost("off_error_overlay");
+    }
+
+    //whatsapp web is open in a nother location
+    if (window.Store.Stream.mode == "CONFLICT") {
+      ipcRenderer.sendToHost("error_overlay","CONFLICT");
+      return;
+    } else {
+      ipcRenderer.sendToHost("off_error_overlay");
+    }
+
+    //need to scan the qr code
+    if (window.Store.Stream.mode == "QR") {
+      ipcRenderer.sendToHost("error_overlay","QR");
+      console.log("error");
+      return;
+    } else {
+      ipcRenderer.sendToHost("off_error_overlay");
+    }
+
+    //phone still paring
+    if (window.Store.Stream.info == "PAIRING") {
+      ipcRenderer.sendToHost("error_overlay","PAIRING");
+      return;
+    } else {
+      ipcRenderer.sendToHost("off_error_overlay");
     }
 
     //start checking every contact

@@ -1,6 +1,6 @@
 {
   "name": "KeepTabs",
-  "version": "v0.1.0",
+  "version": "v0.2.2",
   "description": "Keep tabs on your contacts in Whatsapp",
   "author": "Eithanet",
   "main": "main.js",
@@ -9,10 +9,16 @@
     "start": "electron main.js",
     "pack": "build --dir",
     "dist": "build",
-    "gh": "build --win --p always",
+    "gh": "build --win -p always",
+    "test": "build --linux --dir"
   },
   "build": {
     "appId": "com.electron.keeptabs",
+    "publish": [{
+    "provider": "github",
+    "owner": "Eithanet",
+    "repo": "Keep-Tabs"
+}],
     "dmg": {
       "contents": [
         {
@@ -33,8 +39,7 @@
         {
           "target": "nsis",
           "arch": [
-            "x64",
-            "ia32"
+            "x64"
           ]
         }
       ],
